@@ -4,7 +4,8 @@ const {ElasticBeanstalkClient, DescribeEnvironmentsCommand, ListAvailableSolutio
 async function getCurrentSolutionStackName(client, applicationName, environmentName) {
   const command = new DescribeEnvironmentsCommand({
     ApplicationName: applicationName,
-    EnvironmentNames: [environmentName]
+    EnvironmentNames: [environmentName],
+    IncludeDeleted: false
   });
   const response = await client.send(command);
   if (response.Environments.length === 0) {
@@ -34,7 +35,7 @@ function compareSolutionStackName(actual, expected, useRegex) {
 
 async function fetchLatestAvailableSolutionStack(client, expected) {
   const regex = new RegExp(expected);
-  const command = new ListAvailableSolutionStacksCommand();
+  const command = new ListAvailableSolutionStacksCommand({});
   const response = await client.send(command);
   for(const solution of response.SolutionStacks) {
     if (regex.test(solution)) {
@@ -61,12 +62,13 @@ async function triggerPlatformUpdate(client, applicationName, environmentName, s
 }
 
 async function waitForEnvironmentUpdated(client, applicationName, environmentName, waitTime) {
-  const command = new DescribeEnvironmentsCommand({
+  const commandInput = {
     ApplicationName: applicationName,
-    EnvironmentNames: [environmentName]
-  });
+    EnvironmentNames: [environmentName],
+    IncludeDeleted: false
+  };
 
-  await waitUntilEnvironmentUpdated({client: client, maxWaitTime: waitTime}, command);
+  await waitUntilEnvironmentUpdated({client: client, maxWaitTime: waitTime}, commandInput);
 }
 
 (async () => {
