@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const {ElasticBeanstalkClient, DescribeEnvironmentsCommand, ListAvailableSolutionStacksCommand, UpdateEnvironmentCommand} = require('@aws-sdk/client-elastic-beanstalk');
+const {ElasticBeanstalkClient, DescribeEnvironmentsCommand, ListAvailableSolutionStacksCommand, UpdateEnvironmentCommand, waitUntilEnvironmentUpdated} = require('@aws-sdk/client-elastic-beanstalk');
 
 async function getCurrentSolutionStackName(client, applicationName, environmentName) {
   const command = new DescribeEnvironmentsCommand({
@@ -60,6 +60,15 @@ async function triggerPlatformUpdate(client, applicationName, environmentName, s
   await client.send(command);
 }
 
+async function waitForEnvironmentUpdated(client, applicationName, environmentName, waitTime) {
+  const command = new DescribeEnvironmentsCommand({
+    ApplicationName: applicationName,
+    EnvironmentNames: [environmentName]
+  });
+
+  await waitUntilEnvironmentUpdated({client: client, maxWaitTime: waitTime}, command);
+}
+
 (async () => {
   try {
     const awsAccessKey = core.getInput('aws_access_key', {required: true});
@@ -69,6 +78,7 @@ async function triggerPlatformUpdate(client, applicationName, environmentName, s
     const region = core.getInput('region', {required: true});
     const expected = core.getInput('expected', {required: true});
     const matchRegex = core.getBooleanInput('match_regex');
+    const waitTime = core.getInput('wait_time') || 300;
 
     const client = new ElasticBeanstalkClient({
       credentials: {
@@ -88,7 +98,9 @@ async function triggerPlatformUpdate(client, applicationName, environmentName, s
     const target = matchRegex ? await fetchLatestAvailableSolutionStack(client, expected) : expected;
     core.info(`Updating environment "${environmentName}" in application "${applicationName}" to solution stack "${target}".`);
     await triggerPlatformUpdate(client, applicationName, environmentName, target);
-    core.info('Update triggered.');
+    core.info('Update triggered, waiting for update to finish.');
+    await waitForEnvironmentUpdated(client, applicationName, environmentName, waitTime);
+    core.info('Update complete');
 
     process.exit(0);
   } catch(error) {

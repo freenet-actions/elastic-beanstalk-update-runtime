@@ -44,15 +44,16 @@ that matches the `expected` regex.
 
 ## Inputs
 
-| Input              | Required | Description                                    |
-|--------------------|----------|------------------------------------------------|
-| `aws_access_key`   | yes      | AWS credentials                                |
-| `aws_secret_key`   | yes      | AWS credentials                                |
-| `application_name` | yes      | The application to update                      |
-| `environment_name` | yes      | The environment to update                      |
-| `region`           | yes      | The region in which the application is running |
-| `expected`         | yes      | The expected solution stack name               |
-| `match_regex`      | no       | Set to true to enable regex matching.          |
+| Input              | Required | Default | Description                                                       |
+|--------------------|----------|---------|-------------------------------------------------------------------|
+| `aws_access_key`   | yes      |         | AWS credentials                                                   |
+| `aws_secret_key`   | yes      |         | AWS credentials                                                   |
+| `application_name` | yes      |         | The application to update                                         |
+| `environment_name` | yes      |         | The environment to update                                         |
+| `region`           | yes      |         | The region in which the application is running                    |
+| `expected`         | yes      |         | The expected solution stack name                                  |
+| `match_regex`      | no       | false   | Set to true to enable regex matching.                             |
+| `wait_time`        | no       | 300     | The time in seconds to wait for the environment update to finish. |
 
 ## Development
 

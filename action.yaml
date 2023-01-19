@@ -26,3 +26,7 @@ inputs:
   match_regex:
     description: Enable regex matching
     required: false
+  wait_time:
+    description: Time in seconds to wait for environment update to finish
+    required: false
+    default: '300'
