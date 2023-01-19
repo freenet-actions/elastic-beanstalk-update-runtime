@@ -1,0 +1,28 @@
+name: Dump inputs
+author: Sebastian.Goral@md.de
+description: Dump branch/tag, commit hash and workflwo inputs to log.
+runs:
+  using: node16
+  main: 'index.js'
+inputs:
+  aws_access_key:
+    description: AWS access key
+    required: true
+  aws_secret_key:
+    description: AWS secret key
+    required: true
+  application_name:
+    description: Application to update
+    required: true
+  environment_name:
+    description: Environment to update
+    required: true
+  region:
+    description: AWS region
+    required: true
+  expected:
+    description: Expected solution stack name
+    required: true
+  match_regex:
+    description: Enable regex matching
+    required: false
