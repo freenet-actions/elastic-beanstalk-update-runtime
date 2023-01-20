@@ -55,6 +55,10 @@ that matches the `expected` regex.
 | `match_regex`      | no       | false   | Set to true to enable regex matching.                             |
 | `wait_time`        | no       | 300     | The time in seconds to wait for the environment update to finish. |
 
+## Solution stack names
+
+The avaiable solution stacks are available at https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
+
 ## Development
 
 For GitHub actions, all dependencies need to be included in the repository. Therefore, node_modules is not .gitignore'd.
