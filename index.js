@@ -68,7 +68,8 @@ async function waitForEnvironmentUpdated(client, applicationName, environmentNam
     IncludeDeleted: false
   };
 
-  await waitUntilEnvironmentUpdated({client: client, maxWaitTime: waitTime}, commandInput);
+  // Add maxDelay to waitTime, because waiter exists when elapsed + delay > waitTime
+  await waitUntilEnvironmentUpdated({client: client, maxWaitTime: waitTime + 30, maxDelay: 30}, commandInput);
 }
 
 (async () => {
