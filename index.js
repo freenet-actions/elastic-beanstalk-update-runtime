@@ -100,7 +100,7 @@ async function waitForEnvironmentUpdated(client, applicationName, environmentNam
     const target = matchRegex ? await fetchLatestAvailableSolutionStack(client, expected) : expected;
     core.info(`Updating environment "${environmentName}" in application "${applicationName}" to solution stack "${target}".`);
     await triggerPlatformUpdate(client, applicationName, environmentName, target);
-    core.info('Update triggered, waiting for update to finish.');
+    core.info(`Update triggered, waiting up to ${waitTime} seconds for update to finish.`);
     await waitForEnvironmentUpdated(client, applicationName, environmentName, waitTime);
     core.info('Update complete');
 
