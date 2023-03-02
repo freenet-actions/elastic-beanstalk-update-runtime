@@ -1,0 +1,44 @@
+name: Dependabot auto-merge
+on:
+  pull_request:
+    types:
+      - opened
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - name: Fetch dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: setup node
+        id: note-setup
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        id: update
+        if: steps.node-setup.conclusion == 'success'
+        run: npm ci --omit=dev
+
+      - name: Commit dependencies
+        id: commit
+        if: steps.update.conclusion == 'success'
+        run: git add node_modules && git commit --amend --no-edit && git push --force
+
+      - name: Merge pull request
+        if: steps.commit.conclusion == 'success'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
