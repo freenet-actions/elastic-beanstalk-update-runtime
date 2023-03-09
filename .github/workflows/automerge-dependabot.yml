@@ -21,7 +21,7 @@ jobs:
 
       - name: setup node
         id: note-setup
-        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        if: steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'
         uses: actions/setup-node@v3
         with:
           node-version-file: .nvmrc
