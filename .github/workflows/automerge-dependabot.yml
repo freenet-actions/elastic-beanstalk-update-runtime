@@ -3,6 +3,7 @@ on:
   pull_request:
     types:
       - opened
+      - reopened
 
 permissions:
   contents: write
@@ -39,7 +40,13 @@ jobs:
       - name: Commit dependencies
         id: commit
         if: steps.update.conclusion == 'success'
-        run: git add node_modules && git commit --amend --no-edit && git push --force
+        run: |
+          set -euo pipefail
+          git config user.email "Sebastian.Goral@freenet.ag"
+          git config user.name "Automatic dependency updates"
+          git add node_modules
+          git commit --amend --no-edit
+          git push --force
 
       - name: Merge pull request
         if: steps.commit.conclusion == 'success'
