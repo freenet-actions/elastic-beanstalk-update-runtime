@@ -26,7 +26,7 @@ jobs:
         if: steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
+          ref: master
           fetch-depth: 0
 
       - name: setup node
@@ -36,20 +36,17 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: Install dependencies
-        id: update
+      - name: Update dependencies
         if: steps.node-setup.conclusion == 'success'
-        run: npm ci --omit=dev
-
-      - name: Commit dependencies
-        id: commit
-        if: steps.update.conclusion == 'success'
         run: |
           set -euo pipefail
+          
           git config user.email "Sebastian.Goral@freenet.ag"
           git config user.name "Automatic dependency updates"
+          
+          git cherry-pick origin/${{ github.head_ref }}
+          npm ci --omit=dev
+          
           git add node_modules
-          git commit -m "Update node_modules after dependency update"
-          git switch master
-          git merge --squash "${{ github.head_ref }}"
+          git commit --amend --no-edit
           git push
