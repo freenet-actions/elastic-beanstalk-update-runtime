@@ -13,6 +13,7 @@ permissions:
 jobs:
   merge:
     runs-on: ubuntu-latest
+    concurrency: dependabot-automerge
     if: github.actor == 'dependabot[bot]'
     steps:
       - name: Fetch dependabot metadata
