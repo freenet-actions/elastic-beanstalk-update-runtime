@@ -4,7 +4,6 @@ on:
     types:
       - opened
       - reopened
-      - edited
 
 permissions:
   contents: write
@@ -54,6 +53,6 @@ jobs:
 
       - name: Allow merge
         if: steps.update.conclusion == 'success'
-        run: gh pr comment '${{ github.event.pull_request.number }}' --body '@dependabot squash and merge'
+        run: gh pr merge '${{ github.event.pull_request.number }}' --squash
         env:
           GH_TOKEN: ${{ github.token }}
