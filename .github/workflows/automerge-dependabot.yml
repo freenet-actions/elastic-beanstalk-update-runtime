@@ -46,7 +46,7 @@ jobs:
           git config user.name "Automatic dependency updates"
           
           npm ci --omit=dev
-        
+          
           git add node_modules
           git commit --amend --no-edit
           git push --force
