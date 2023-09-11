@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/freenet-actions/elastic-beanstalk-update-runtime#readme",
   "dependencies": {
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^1.10.1",
     "@aws-sdk/client-elastic-beanstalk": "^3.408.0"
   }
 }
