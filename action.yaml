@@ -2,7 +2,7 @@ name: Dump inputs
 author: Sebastian.Goral@md.de
 description: Dump branch/tag, commit hash and workflwo inputs to log.
 runs:
-  using: node16
+  using: node20
   main: 'index.js'
 inputs:
   aws_access_key:
