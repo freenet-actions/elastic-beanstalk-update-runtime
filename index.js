@@ -68,8 +68,8 @@ async function waitForEnvironmentUpdated(client, applicationName, environmentNam
     IncludeDeleted: false
   };
 
-  // Add maxDelay to waitTime, because waiter exists when elapsed + delay > waitTime
-  await waitUntilEnvironmentUpdated({client: client, maxWaitTime: waitTime + 30, maxDelay: 30}, commandInput);
+  // Subtract maxDelay from waitTime, because waiter exits when elapsed + delay > waitTime
+  await waitUntilEnvironmentUpdated({client: client, maxWaitTime: waitTime - 30, maxDelay: 30}, commandInput);
 }
 
 (async () => {
@@ -81,7 +81,7 @@ async function waitForEnvironmentUpdated(client, applicationName, environmentNam
     const region = core.getInput('region', {required: true});
     const expected = core.getInput('expected', {required: true});
     const matchRegex = core.getBooleanInput('match_regex');
-    const waitTime = core.getInput('wait_time') || 300;
+    const waitTime = core.getInput('wait_time') || 600;
 
     const client = new ElasticBeanstalkClient({
       credentials: {
